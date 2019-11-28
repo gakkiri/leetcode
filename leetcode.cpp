@@ -1,7 +1,4 @@
-﻿// sum of two numbers.cpp : 此文件包含 "main" 函数。程序执行将在此处开始并结束。
-//
-
-#include <iostream>
+﻿#include <iostream>
 #include <string>
 #include <vector>
 #include <unordered_map>
@@ -723,10 +720,6 @@ public:
 			next->next = head;  // 1. 先看这里, 每次递归要做的是交换两个节点
 			return next;  // next现在是head, 所以return next
 		}
-
-		void a(ListNode* head) {
-			head->val = 999;
-		}
 		// 平衡二叉树
 		bool isBalanced(TreeNode* root) {
 			if (root == NULL) return true;
@@ -756,6 +749,19 @@ public:
 			else if (root->right != NULL) return right_depth + 1; // 同上
 			return 1;
 		}
+		// 不同路径
+		int uniquePaths(int m, int n) {
+			vector<vector<int>> dp(m, vector<int>(n, 0));
+			for (int x = 0; x < m; x++) {
+				for (int y = 0; y < n; y++) {
+					if (x == 0 || y == 0) dp[x][y] = 1;
+					else {
+						dp[x][y] = dp[x - 1][y] + dp[x][y - 1];
+					}
+				}
+			}
+			return dp[m - 1][n - 1];
+		}
 };
 
 
@@ -764,10 +770,9 @@ int main()
 {
 	Solution solve;
 
-	ListNode* head = &ListNode(1), *p = head;
-	p->next = &ListNode(5);
-	solve.a(head);
-	cout << head->val;
+	int m = 3, n = 2;
+	int res = solve.uniquePaths(m, n);
+	cout << res;
 
 	return 0;
 }
