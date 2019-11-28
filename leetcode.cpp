@@ -723,6 +723,39 @@ public:
 			next->next = head;  // 1. 先看这里, 每次递归要做的是交换两个节点
 			return next;  // next现在是head, 所以return next
 		}
+
+		void a(ListNode* head) {
+			head->val = 999;
+		}
+		// 平衡二叉树
+		bool isBalanced(TreeNode* root) {
+			if (root == NULL) return true;
+			int _ = depth(root);
+			return root->val <= 1;
+		}
+		int depth(TreeNode * root) {
+			if (root == NULL) return 0;
+
+			int left_depth = depth(root->left);
+			int right_depth = depth(root->right);
+			// root->val放的是子树和自身最大高度差
+			root->val = abs(left_depth - right_depth);
+			if (root->right != NULL) root->val = max(root->val, root->right->val);
+			if (root->left != NULL) root->val = max(root->val, root->left->val);
+			return max(left_depth, right_depth) + 1;
+		}
+		// 二叉树最小深度(类似求最大深度
+		int minDepth(TreeNode* root) {
+			if (root == NULL) return 0;
+
+			int left_depth = minDepth(root->left);
+			int right_depth = minDepth(root->right);
+
+			if (root->left != NULL && root->right != NULL) return min(left_depth, right_depth) + 1;
+			else if (root->left != NULL) return left_depth + 1; // 否则会直接返回0
+			else if (root->right != NULL) return right_depth + 1; // 同上
+			return 1;
+		}
 };
 
 
@@ -731,6 +764,10 @@ int main()
 {
 	Solution solve;
 
+	ListNode* head = &ListNode(1), *p = head;
+	p->next = &ListNode(5);
+	solve.a(head);
+	cout << head->val;
 
 	return 0;
 }
