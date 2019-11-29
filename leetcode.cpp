@@ -755,14 +755,12 @@ public:
 			for (int x = 0; x < m; x++) {
 				for (int y = 0; y < n; y++) {
 					if (x == 0 || y == 0) dp[x][y] = 1;
-					else {
-						dp[x][y] = dp[x - 1][y] + dp[x][y - 1];
-					}
+					else dp[x][y] = dp[x - 1][y] + dp[x][y - 1];
 				}
 			}
 			return dp[m - 1][n - 1];
 		}
-		//不同路径II 带障碍物
+		// 不同路径II 带障碍物
 		int uniquePathsWithObstacles(vector<vector<int>>& obstacleGrid) {
 			int X = obstacleGrid[0].size(), Y = obstacleGrid.size();
 			if (obstacleGrid[0][0] == 1 || obstacleGrid[Y - 1][X - 1] == 1) return 0;
@@ -778,6 +776,19 @@ public:
 				}
 			}
 			return dp[Y - 1][X - 1];
+		}
+		// 最小路径和
+		int minPathSum(vector<vector<int>>& grid) {
+			int X = grid[0].size(), Y = grid.size();
+			for (int y = 0; y < Y; y++) {
+				for (int x = 0; x < X; x++) {
+					if (x == 0 && y == 0) continue;
+					if (x == 0) grid[y][x] += grid[y - 1][x];
+					else if (y == 0) grid[y][x] += grid[y][x - 1];
+					else grid[y][x] += min(grid[y - 1][x], grid[y][x - 1]);
+				}
+			}
+			return grid[Y - 1][X - 1];
 		}
 };
 
