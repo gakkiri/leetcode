@@ -762,6 +762,23 @@ public:
 			}
 			return dp[m - 1][n - 1];
 		}
+		//不同路径II 带障碍物
+		int uniquePathsWithObstacles(vector<vector<int>>& obstacleGrid) {
+			int X = obstacleGrid[0].size(), Y = obstacleGrid.size();
+			if (obstacleGrid[0][0] == 1 || obstacleGrid[Y - 1][X - 1] == 1) return 0;
+			vector<vector<long>> dp(Y, vector<long>(X, 0));  // 存在中间计算值大于INT_MAX的情况, 所以要用long
+			for (int y = 0; y < Y; y++) {
+				for (int x = 0; x < X; x++) {
+					if (obstacleGrid[y][x] == 1) continue;
+					if (x == 0 && y == 0) dp[y][x] = 1;
+					else if (y == 0 && dp[y][x - 1] != 0) dp[y][x] = 1;
+					else if (x == 0 && dp[y - 1][x] != 0) dp[y][x] = 1;
+					else dp[y][x] = dp[max(y - 1, 0)][x] + dp[y][max(x - 1, 0)];
+					cout << "yx: " << y << " " << x << "  " << dp[y][x] << endl;
+				}
+			}
+			return dp[Y - 1][X - 1];
+		}
 };
 
 
@@ -769,10 +786,6 @@ public:
 int main()
 {
 	Solution solve;
-
-	int m = 3, n = 2;
-	int res = solve.uniquePaths(m, n);
-	cout << res;
 
 	return 0;
 }
