@@ -790,6 +790,34 @@ public:
 			}
 			return grid[Y - 1][X - 1];
 		}
+		// 解码方法 递归但是把空间复杂度降低到O(1)
+		int numDecodings(string s) {
+			if (s[0] == '0') return 0;
+			int ppre = 1, pre = 1, cur;
+			for (int i = 1; i < s.length(); i++) {
+				if (s[i] == '0' && s[i - 1] > '2') return 0;
+				else if (s[i] == '0' && s[i - 1] > '0') cur = ppre;
+				else if ((s[i - 1] == '2' && s[i] <= '6') || s[i - 1] == '1') cur = pre + ppre;
+				else if (s[i] != '0') cur = pre;
+				else cur = 0;
+				ppre = pre;
+				pre = cur;
+			}
+			return pre;
+		}
+		// 不同的二叉搜索树, 没什么思路...题解有动态规划和catalan数法
+		// G(n) = G(0)*G(n-1) + G(1)*G(n-2) + ... + G(n-1)G(0)
+		int numTrees(int n) {
+			vector<int> dp(n + 2, 0);  // n+2是因为如果n为0的话, 会越界
+			dp[0] = dp[1] = 1;
+			for (int i = 2; i < n; i++) {
+				int _i = i - 1;
+				for (int j = 0; j < i; j++) {
+					dp[i] += dp[j] * dp[_i - j];
+				}
+			}
+			return dp[n];
+		}
 };
 
 
