@@ -818,6 +818,34 @@ public:
 			}
 			return dp[n];
 		}
+		// 不同的二叉搜索树II, 递归
+		vector<TreeNode*> generateTrees(int n) {
+			vector<TreeNode*> res;
+			if (n != 0) res = generate(1, n);
+			return res;
+
+		}
+		vector<TreeNode*> generate(int start, int end) {
+			vector<TreeNode*> all_tree;
+			if (start > end) {
+				all_tree.push_back(NULL);
+				return all_tree;
+			}
+			for (int i = start; i <= end; i++) {
+				vector<TreeNode*> left_tree = generate(start, i - 1);
+				vector<TreeNode*> right_tree = generate(i + 1, end);
+				for (auto left : left_tree) {
+					for (auto right : right_tree) {
+						TreeNode* cur_tree = new TreeNode(i);
+						cur_tree->left = left;
+						cur_tree->right = right;
+						all_tree.push_back(cur_tree);
+					}
+				}
+			}
+			return all_tree;
+		}
+
 };
 
 
