@@ -845,6 +845,26 @@ public:
 			}
 			return all_tree;
 		}
+		// 三角形最小路径和, 原地求和, 不需要额外空间
+		int minimumTotal(vector<vector<int>>& triangle) {
+			int length = triangle.size();
+			if (length == 0) return 0;
+			else if (length == 1) return triangle[0][0];
+			for (int i = 1; i < length; i++) {
+				for (int j = 0; j < triangle[i].size(); j++) {
+					if (j == 0) triangle[i][j] += triangle[i - 1][0];
+					else if (j == triangle[i].size() - 1) triangle[i][j] += triangle[i - 1][j - 1];
+					else {
+						triangle[i][j] += min(triangle[i - 1][j - 1], triangle[i - 1][j]);
+					}
+				}
+			}
+			int res = INT_MAX;
+			for (auto i : triangle[length - 1]) {
+				if (res > i) res = i;
+			}
+			return res;
+		}
 
 };
 
@@ -853,6 +873,10 @@ public:
 int main()
 {
 	Solution solve;
+
+	vector<int> a = { 1, -1 ,-3 };
+	sort(a.begin(), a.end());
+	for (auto i : a) cout << i << endl;
 
 	return 0;
 }
