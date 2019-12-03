@@ -845,6 +845,26 @@ public:
 			}
 			return all_tree;
 		}
+		// 买卖股票的最佳时机, 一次遍历
+		int maxProfit(vector<int>& prices) {
+			int length = prices.size();
+			if (length == 0 || length == 1) return 0;
+			int _min = INT_MAX, _max = INT_MIN, pos, res = 0;
+			for (int i = 0; i < length; i++) {
+				int val = prices[i];
+				if (_min > val && i != length - 1) {
+					_min = val;
+					pos = i;
+					_max = INT_MIN;
+				}
+				if (_max < val && pos < i) {
+					_max = val;
+					int _res = _max - _min;
+					if (res < _res) res = _res;
+				}
+			}
+			return res;
+		}
 		// 三角形最小路径和, 原地求和, 不需要额外空间
 		int minimumTotal(vector<vector<int>>& triangle) {
 			int length = triangle.size();
@@ -865,7 +885,37 @@ public:
 			}
 			return res;
 		}
-
+		// 爬楼梯
+		int climbStairs(int n) {
+			int res = 1;
+			if (n == 0) return 0;
+			if (n == 1) return 1;
+			int ppre = 1, pre = 2, cur;
+			for (int i = 2; i < n; i++) {
+				cur = ppre + pre;
+				ppre = pre;
+				pre = cur;
+			}
+			return cur;
+		}
+		// 单词拆分
+		bool wordBreak(string s, vector<string>& wordDict) {
+			if (s.size() == 0) return 0;
+			vector<bool> dp(s.size() + 1, false);
+			dp[0] = true;
+			for (int i = 0; i < s.size(); i++) {
+				for (string word : wordDict) {
+					int pos = i - word.length() + 1;
+					if (pos >= 0) {
+						int is_word = s.compare(pos, word.length(), word) + 1;
+						if (is_word == 1 && dp[pos] == 1) {
+							dp[i + 1] = 1;
+						}
+					}
+				}
+			}
+			return dp[s.size()];
+		}
 };
 
 
@@ -874,9 +924,9 @@ int main()
 {
 	Solution solve;
 
-	vector<int> a = { 1, -1 ,-3 };
-	sort(a.begin(), a.end());
-	for (auto i : a) cout << i << endl;
+	vector<string> wordDict = { "apple", "pen" };
+	string s = "applepenapple";
+	cout << solve.wordBreak(s, wordDict);
 
 	return 0;
 }
