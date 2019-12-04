@@ -916,6 +916,30 @@ public:
 			}
 			return dp[s.size()];
 		}
+		// 乘积最大子序列, 空间压缩到O(1)
+		int maxProduct(vector<int>& nums) {
+			int length = nums.size(), res = INT_MIN;
+			if (length == 1) return nums[0];
+			for (int y = 0; y < length; y++) {
+				int cur = 0;
+				for (int x = y; x < length; x++) {
+					if (y == x) cur = nums[x];
+					else cur = cur * nums[x];
+					if (res < cur) res = cur;
+				}
+			}
+			return res;
+		}
+		// 打家劫舍
+		int rob(vector<int>& nums) {
+			int ppre = 0, pre = 0, cur = 0;
+			for (auto num : nums) {
+				cur = max(ppre + num, pre);
+				ppre = pre;
+				pre = cur;
+			}
+			return cur;
+		}
 };
 
 
@@ -923,10 +947,6 @@ public:
 int main()
 {
 	Solution solve;
-
-	vector<string> wordDict = { "apple", "pen" };
-	string s = "applepenapple";
-	cout << solve.wordBreak(s, wordDict);
 
 	return 0;
 }
