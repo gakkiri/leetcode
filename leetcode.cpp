@@ -940,6 +940,63 @@ public:
 			}
 			return cur;
 		}
+		// 打家劫舍II, 分两种情况同步dp
+		// 第一种情况: 偷第一家
+		// 第二种情况: 不偷第一家
+		int rob2(vector<int>& nums) {
+			if (nums.size() == 0) return 0;
+			else if (nums.size() == 1) return nums[0];
+			else if (nums.size() == 2) return max(nums[0], nums[1]);
+			int ppre0 = 0, pre0 = 0, cur0 = 0;
+			int ppre1 = 0, pre1 = 0, cur1 = 0;
+			for (int i = 0; i < nums.size() - 1; i++) {
+				cur0 = max(ppre0 + nums[i], pre0);
+				ppre0 = pre0;
+				pre0 = cur0;
+
+				cur1 = max(ppre1 + nums[i + 1], pre1);
+				ppre1 = pre1;
+				pre1 = cur1;
+			}
+			return max(cur0, cur1);
+		}
+		// 最大正方形
+		int maximalSquare(vector<vector<char>>& matrix) {
+			if (matrix.size() == 0) return 0;
+			int Y = matrix.size(), X = matrix[0].size(), l = 0, max_l = 0;
+			for (int y = 0; y < Y; y++) {
+				for (int x = 0; x < X; x++) {
+					if (matrix[y][x] != '1') continue;
+					bool is_rectangle = true;
+					while (is_rectangle) {
+						if (x + l >= X || y + l >= Y) {
+							is_rectangle = false;
+							max_l = max(max_l, l);
+							break;
+						}
+						for (int _x = x; _x < x + l + 1; _x++) {
+							if (matrix[y][_x] == '0' || matrix[y + l][_x] == '0') {
+								is_rectangle = false;
+								break;
+							}
+						}
+						for (int _y = y; _y < y + l; _y++) {
+							if (matrix[_y][x] == '0' || matrix[_y][x + l] == '0') {
+								is_rectangle = false;
+								break;
+							}
+						}
+						if (!is_rectangle) { 
+							max_l = max(max_l, l);
+							l = 0;
+							break;
+						}
+						else ++l;
+					}
+				}
+			}
+			return max_l * max_l;
+		}
 };
 
 
@@ -947,6 +1004,9 @@ public:
 int main()
 {
 	Solution solve;
+
+	vector<vector<char>> matrix = { {'1'} };
+	cout << solve.maximalSquare(matrix);
 
 	return 0;
 }
