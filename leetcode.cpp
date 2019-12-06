@@ -997,6 +997,28 @@ public:
 			}
 			return max_l * max_l;
 		}
+		// 丑数
+		int nthUglyNumber(int n) {
+			if (n == 0) return 0;
+			vector<int> ugly_set = { 2, 3, 5 };
+			priority_queue <long long, vector<long long>, greater<long long>> q; // 小顶堆
+			q.push(1);
+			long long cur = 0;
+			for (int i = 0; i < n; i++) {
+				if (cur == q.top()) {
+					q.pop();
+					--i;
+					continue;
+				}
+				cur = q.top();
+				q.pop();
+				for (auto e : ugly_set) {
+					long long _e = e * cur;
+					q.push(_e);
+				}
+			}
+			return cur;
+		}
 };
 
 
@@ -1005,8 +1027,7 @@ int main()
 {
 	Solution solve;
 
-	vector<vector<char>> matrix = { {'1'} };
-	cout << solve.maximalSquare(matrix);
+	cout << solve.nthUglyNumber(901);
 
 	return 0;
 }
