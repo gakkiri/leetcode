@@ -1019,6 +1019,26 @@ public:
 			}
 			return cur;
 		}
+		// 完全平方数
+		/*
+		递归式f(n) = 1 + min{f(n - 1^2), f(n - 2^2), ..., f(n - i^2)}, i^2 >= n;
+		例子:
+		f(0) = 0, f(1) = 1,
+		f(2) = 1 + min{f(1)} = 2
+		f(3) = 1 + min{f(2)} = 3
+		f(4) = 1 + min{f(3), f(0)} = 1
+		f(5) = 1 + min{f(4), f(1)} = 2
+		...
+		*/
+		int numSquares(int n) {
+			vector<int> dp = { 0, 1 };
+			for (int i = 2; i <= n; i++) {
+				int _min = INT_MAX;
+				for (int k = 1; pow(k, 2) <= i; k++) _min = min(_min, dp[i - pow(k, 2)]);
+				dp.push_back(1 + _min);
+			}
+			return dp[n];
+		}
 };
 
 
@@ -1027,7 +1047,7 @@ int main()
 {
 	Solution solve;
 
-	cout << solve.nthUglyNumber(901);
+	cout << solve.numSquares(19);
 
 	return 0;
 }
