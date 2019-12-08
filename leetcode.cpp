@@ -1039,6 +1039,22 @@ public:
 			}
 			return dp[n];
 		}
+		// 最长上升子序列
+		int lengthOfLIS(vector<int>& nums) {
+			if (nums.size() <= 1) return nums.size();
+			vector<int> dp(nums.size(), 0);
+			dp[0] = 1;
+			int res = 1;
+			for (int i = 1; i < nums.size(); i++) {
+				int max_dp = 0;
+				for (int j = 0; j < i; j++) {
+						if (nums[j] < nums[i]) max_dp = max(max_dp, dp[j]);
+				}
+				dp[i] = 1 + max_dp;
+				res = max(res, 1 + max_dp);
+			}
+			return res;
+		}
 };
 
 
@@ -1047,7 +1063,6 @@ int main()
 {
 	Solution solve;
 
-	cout << solve.numSquares(19);
 
 	return 0;
 }
