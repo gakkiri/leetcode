@@ -1056,6 +1056,46 @@ public:
 			return res;
 		}
 };
+// 区域和检索 - 数组不可变
+class NumArray {
+public:
+	vector<int> _nums;
+	NumArray(vector<int>& nums) {
+		_nums = nums;
+	}
+	int sumRange(int i, int j) {
+		int res = 0;
+		for (int idx = i; idx <= j; idx++) res += _nums[idx];
+		return res;
+	}
+};
+// 二维区域和检索 - 矩阵不可变
+class NumMatrix {
+public:
+	vector<vector<int>> _matrix;
+	int length;
+	NumMatrix(vector<vector<int>>& matrix) {
+		length = matrix.size();
+		_matrix = matrix;
+		if (length != 0) {
+			for (int y = 0; y < length; y++) {
+				for (int x = 1; x < _matrix[0].size(); x++) {
+					_matrix[y][x] += _matrix[y][x - 1];
+				}
+			}
+		}
+	}
+	int sumRegion(int row1, int col1, int row2, int col2) {
+		if (length == 0) return 0;
+		int res = 0;
+		for (int y = row1; y <= row2; y++) {
+			int ele = 0;
+			if (col1 - 1 >= 0) ele = _matrix[y][col1 - 1];
+			res += _matrix[y][col2] - ele;
+		}
+		return res;
+	}
+};
 
 
 
@@ -1063,6 +1103,15 @@ int main()
 {
 	Solution solve;
 
+	vector<vector<int>> a = {
+		{3, 0, 1, 4, 2},
+		{5, 6, 3, 2, 1},
+		{1, 2, 0, 1, 5},
+		{4, 1, 0, 1, 7},
+		{1, 0, 3, 0, 5}
+	};
+	NumMatrix m(a);
+	cout << m.sumRegion(1, 1, 2, 2);
 
 	return 0;
 }
