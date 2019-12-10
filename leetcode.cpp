@@ -1055,6 +1055,21 @@ public:
 		}
 		return res;
 	}
+	// 最佳买卖股票时机含冷冻期, 思路不是很清晰.
+	// 参考了https://leetcode-cn.com/problems/best-time-to-buy-and-sell-stock-with-cooldown/solution/309-zui-jia-mai-mai-gu-piao-shi-ji-han-leng-dong-q/
+	int maxProfit(vector<int>& prices) {
+		if (prices.size() == 0) return 0;
+		int hold = -prices[0], sold = 0, rest = 0;  // 初始化资金为0, 从第二天开始算, hold为-prices[0]
+		prices.erase(prices.begin(), prices.begin() + 1);  //去掉第一天
+		for (int price : prices) {
+			int pre_sold = sold;
+			sold = hold + price;  // 卖掉后资金为持有资金+股票资金
+			hold = max(hold, rest - price);  // 持有资金: 1. 之前持有  2. 买入后持有
+			rest = max(rest, pre_sold);  // 什么都不做的资金:  1. 之前什么的不做的资金  2. 昨天卖, 进入解冻期, 所以什么都不做
+		}
+		return max(rest, sold);  // 最后一天, 要么什么都不做要么卖掉, 绝对不会是持有股票
+	}
+	}
 };
 // 区域和检索 - 数组不可变
 class NumArray {
