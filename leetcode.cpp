@@ -1057,7 +1057,7 @@ public:
 	}
 	// 最佳买卖股票时机含冷冻期, 思路不是很清晰.
 	// 参考了https://leetcode-cn.com/problems/best-time-to-buy-and-sell-stock-with-cooldown/solution/309-zui-jia-mai-mai-gu-piao-shi-ji-han-leng-dong-q/
-	int maxProfit(vector<int>& prices) {
+	int maxProfit2(vector<int>& prices) {
 		if (prices.size() == 0) return 0;
 		int hold = -prices[0], sold = 0, rest = 0;  // 初始化资金为0, 从第二天开始算, hold为-prices[0]
 		prices.erase(prices.begin(), prices.begin() + 1);  //去掉第一天
@@ -1069,6 +1069,31 @@ public:
 		}
 		return max(rest, sold);  // 最后一天, 要么什么都不做要么卖掉, 绝对不会是持有股票
 	}
+	// 零钱兑换
+	// 状态转移方程: f(n) = 1 + min{f(n - c[0]), f(n - c[1]), ..., f(n - c[i])}
+	/*
+	f(11) = 1 + min{f(10), f(8), f(6)}
+	f(10) = 1 + min{f(9), f(7), f(5)}
+	f(9)  = 1 + min{f(8), f(6), f(4)}
+	...
+	f(3)  = 1 + min{f(2), f(0)} = 1
+	f(2)  = 1 + min{f{1}} = 2
+	f(1)  = 1 + min{f(0)} = 1
+	f(0)  = 0
+	*/
+	int coinChange(vector<int> & coins, int amount) {
+		int res = 0;
+		vector<int> f(amount + 1, 0);
+		for (int n = 1; n <= amount; n++) {
+			int _min = amount + 1;
+			for (int i : coins) {
+				if (n - i < 0) continue;
+				_min = min(_min, f[n - i]);
+			}
+			f[n] = 1 + _min;
+		}
+		if (f[amount] > amount) return -1;
+		return f[amount];
 	}
 };
 // 区域和检索 - 数组不可变
@@ -1118,15 +1143,8 @@ int main()
 {
 	Solution solve;
 
-	vector<vector<int>> a = {
-		{3, 0, 1, 4, 2},
-		{5, 6, 3, 2, 1},
-		{1, 2, 0, 1, 5},
-		{4, 1, 0, 1, 7},
-		{1, 0, 3, 0, 5}
-	};
-	NumMatrix m(a);
-	cout << m.sumRegion(1, 1, 2, 2);
+	vector<int> coins = { 3, 5 };
+	cout << solve.coinChange(coins, 4);
 
 	return 0;
 }
