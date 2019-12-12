@@ -1095,6 +1095,20 @@ public:
 		if (f[amount] > amount) return -1;
 		return f[amount];
 	}
+	// 比特位计数
+	// 对于奇数, 1的个数一定与除以2的数加上1相等
+	// 对于偶数, 1的个数一定与除以2的数相等
+	// 由此得到状态转移方程
+	vector<int> countBits(int num) {
+		vector<int> dp(num + 1, 0);
+		if (num == 0) return dp;
+		dp[1] = 1;
+		for (int i = 2; i <= num; i++) {
+			if (i % 2 == 0) dp[i] = dp[i / 2];
+			else dp[i] = dp[i / 2] + 1;
+		}
+		return dp;
+	}
 };
 // 区域和检索 - 数组不可变
 class NumArray {
