@@ -1109,6 +1109,18 @@ public:
 		}
 		return dp;
 	}
+	// 整数拆分
+	int integerBreak(int n) {
+		vector<int> dp = { 1, 2, 4, 6, 9 };  // 索引0对应数字2
+		for (int i = 7; i <= n; i++) {
+			int idx = i - 2, _max = INT_MIN;
+			for (int j = idx - 1; j >= 0; j--) {
+				_max = max(dp[j] * (idx - j), _max);
+			}
+			dp.push_back(_max);
+		}
+		return dp[n - 2];
+	}
 };
 // 区域和检索 - 数组不可变
 class NumArray {
@@ -1157,8 +1169,7 @@ int main()
 {
 	Solution solve;
 
-	vector<int> coins = { 3, 5 };
-	cout << solve.coinChange(coins, 4);
+	cout << solve.integerBreak(10);
 
 	return 0;
 }
