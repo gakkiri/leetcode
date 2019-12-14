@@ -1121,6 +1121,23 @@ public:
 		}
 		return dp[n - 2];
 	}
+	// 计算各个位数不同的数字个数
+	// 数字一共有n位, 第1位用了数字num, 第2位数字的选择就是9-1=8, 第三位再少1, 以此类推
+	// f(1) = 10, 初始
+	// f(2) -> 9*9 + f(1) = 91
+	// f(3) -> 9*9*8 + f(2)
+	// ...
+	// n > 10 后必定有重复数字, 所以恒为f(10)
+	int countNumbersWithUniqueDigits(int n) {
+		if (n == 0) return 1;
+		int pre_f = 10, bias = 9, num = 10;
+		n = min(n, 10);
+		for (int i = 2; i <= n; i++) {
+			bias *= --num;
+			pre_f += bias;
+		}
+		return pre_f;
+	}
 };
 // 区域和检索 - 数组不可变
 class NumArray {
@@ -1169,7 +1186,7 @@ int main()
 {
 	Solution solve;
 
-	cout << solve.integerBreak(10);
+	cout << solve.countNumbersWithUniqueDigits(0);
 
 	return 0;
 }
