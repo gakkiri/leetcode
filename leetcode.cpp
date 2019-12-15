@@ -1138,6 +1138,36 @@ public:
 		}
 		return pre_f;
 	}
+	// 最大整除子集
+	vector<int> largestDivisibleSubset(vector<int>& nums) {
+		if (nums.size() <= 1) return nums;
+		vector<int> dp(nums.size(), 0);
+		vector<int> path(nums.size(), -1);
+		sort(nums.begin(), nums.end());
+		int _max = INT_MIN, _idx = 0;
+		for (int i = 0; i < nums.size(); i++) {
+			for (int j = i; j >= 0; j--) {
+				if (nums[i] % nums[j] == 0 && j != i) {
+					if (dp[j] + 1 > dp[i]) {
+						dp[i] = dp[j] + 1;
+						path[i] = j;
+					}
+					if (dp[i] > _max) {
+						_max = dp[i];
+						_idx = i;
+					}
+				}
+				else if (i == j) dp[i] = 1;
+			}
+		}
+		vector<int> res = {nums[_idx]};
+		_idx = path[_idx];
+		while (_idx >= 0) {
+			res.push_back(nums[_idx]);
+			_idx = path[_idx];
+		}
+		return res;
+	}
 };
 // 区域和检索 - 数组不可变
 class NumArray {
@@ -1181,12 +1211,11 @@ public:
 };
 
 
-
 int main()
 {
 	Solution solve;
-
-	cout << solve.countNumbersWithUniqueDigits(0);
-
-	return 0;
+	vector<int> nums = { 4, 8, 10, 240 };
+	vector<int> res = solve.largestDivisibleSubset(nums);
+	cout << endl;
+	for (int i : res) cout << i << ", ";
 }
