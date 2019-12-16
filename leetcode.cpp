@@ -1168,6 +1168,23 @@ public:
 		}
 		return res;
 	}
+	// 猜数字大小II, 真的又绕又难.
+	// dp矩阵n x n, 只考虑y <= x的区域, 对角线为0
+	// 对于dp[y][x], 具有y < x, 表示第y个数字到第x个数字的切片(dp[y: x])的极小极大
+	// 特别注意填矩阵的时候要斜着填
+	int getMoneyAmount2(int n) {
+		vector<vector<int>> dp(n, vector<int>(n, 0)); 
+		for (int len = 2; len <= n; len++) { 
+			for (int y = 0; y < n - len + 1; y++) { 
+				int _min = INT_MAX;
+				for (int x = y; x < y + len - 1; x++) {
+					_min = min(_min, x + 1 + max(dp[y][max(x - 1, 0)], dp[x + 1][y + len - 1]));
+				}
+				dp[y][y + len - 1] = _min;
+			}
+		}
+		return dp[0][n - 1];
+	}
 };
 // 区域和检索 - 数组不可变
 class NumArray {
@@ -1214,8 +1231,5 @@ public:
 int main()
 {
 	Solution solve;
-	vector<int> nums = { 4, 8, 10, 240 };
-	vector<int> res = solve.largestDivisibleSubset(nums);
-	cout << endl;
-	for (int i : res) cout << i << ", ";
+	cout << solve.getMoneyAmount2(10);
 }
