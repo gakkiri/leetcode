@@ -1178,12 +1178,56 @@ public:
 			for (int y = 0; y < n - len + 1; y++) { 
 				int _min = INT_MAX;
 				for (int x = y; x < y + len - 1; x++) {
+					cout << "y,x: " << y << "," << y + len - 1 << "->" << y << "," << x - 1 << "|" << x + 1 << "," << y + len - 1 << endl;
 					_min = min(_min, x + 1 + max(dp[y][max(x - 1, 0)], dp[x + 1][y + len - 1]));
 				}
 				dp[y][y + len - 1] = _min;
 			}
 		}
+		for (auto y : dp) {
+			for (auto x : y) {
+				cout << x << " ";
+			}
+			cout << endl;
+		}
 		return dp[0][n - 1];
+	}
+	// 移动零
+	// 原地操作, 一次遍历
+	void moveZeroes(vector<int>& nums) {
+		int len = nums.size(), i = 0;
+		for (int j = 0; j < len; j++) {
+			if (nums[i] == 0) {
+				nums.erase(nums.begin() + i, nums.begin() + i + 1);
+				nums.push_back(0);
+			}
+			else ++i;
+		}
+	}
+	// 合并两个有序数组
+	void merge(vector<int>& nums1, int m, vector<int>& nums2, int n) {
+		vector<int> res;
+		int p_nums1 = 0, p_nums2 = 0;
+		for (int i = 0; i < m + n; i++) {
+			if (p_nums1 > m - 1 || p_nums2 > n - 1) break;
+			if (nums1[p_nums1] <= nums2[p_nums2]) {
+				res.push_back(nums1[p_nums1]);
+				++p_nums1;
+			}
+			else {
+				res.push_back(nums2[p_nums2]);
+				++p_nums2;
+			}
+		}
+		while (p_nums1 <= m - 1) {
+			res.push_back(nums1[p_nums1]);
+			++p_nums1;
+		}
+		while (p_nums2 <= n - 1) {
+			res.push_back(nums2[p_nums2]);
+			++p_nums2;
+		}
+		nums1 = res;
 	}
 };
 // 区域和检索 - 数组不可变
@@ -1231,5 +1275,5 @@ public:
 int main()
 {
 	Solution solve;
-	cout << solve.getMoneyAmount2(10);
+	cout << solve.getMoneyAmount2(5);
 }
