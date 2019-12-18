@@ -1229,6 +1229,21 @@ public:
 		}
 		nums1 = res;
 	}
+	// 摆动序列
+	// 去掉所有非波峰波谷点, ref: https://leetcode-cn.com/problems/wiggle-subsequence/solution/bai-dong-xu-lie-qu-diao-bo-gu-shi-yong-xie-lu-by-z/
+	int wiggleMaxLength(vector<int>& nums) {
+		int i = 0, j = 1, k = 2;
+		while (k < nums.size()) {
+			if ((nums[j] - nums[i] > 0 && nums[k] - nums[j] < 0) || (nums[j] - nums[i] < 0 && nums[k] - nums[j] > 0)) { // 波峰或波谷
+				++k;
+				++j;
+				++i;
+			}
+			else nums.erase(nums.begin() + j, nums.begin() + k);
+		}
+		if (nums[0] == nums[1]) return nums.size() - 1;
+		return nums.size();
+	}
 };
 // 区域和检索 - 数组不可变
 class NumArray {
