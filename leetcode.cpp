@@ -1244,6 +1244,27 @@ public:
 		if (nums[0] == nums[1]) return nums.size() - 1;
 		return nums.size();
 	}
+	// 组合总和IV
+	// 动态规划: 假设题目是nums = [n1, n2, n3], target = n
+	// 则状态转移方程: dp[n] = dp[n - n1] + dp[n - n2] + dp[n - n3], dp[0] = 1;
+	int gcd(int a, int b) {
+		return b ? gcd(b, a % b) : a;
+	}
+	int combinationSum4(vector<int>& nums, int target) {
+		if (nums.size() == 0) return 0;
+		int g = nums[0];
+		for (int i : nums) g = gcd(g, i);
+		sort(nums.begin(), nums.end());
+		if ((nums[0] > target) || target % g != 0) return 0;
+		vector<unsigned long long> dp(target + 2, 0);
+		dp[0] = dp[1] = 1;
+		for (int i = 2; i <= target; i++) {
+			for (int e : nums) {
+				if ((i - e == 0) || (i - e >= nums[0])) dp[i] += dp[i - e];
+			}
+		}
+		return dp[target];
+	}
 };
 // 区域和检索 - 数组不可变
 class NumArray {
