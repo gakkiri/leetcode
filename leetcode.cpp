@@ -1265,6 +1265,19 @@ public:
 		}
 		return dp[target];
 	}
+	// 等差数列划分
+	int numberOfArithmeticSlices(vector<int>& A) {
+		if (A.size() <= 2) return 0;
+		vector<int> dp(A.size(), 0);
+		int res = 0;
+		for (int i = 2; i < A.size(); i++) {
+			if (A[i] - A[i - 1] == A[i - 1] - A[i - 2]) {
+				dp[i] = dp[i - 1] + 1;
+				res += dp[i];
+			}
+		}
+		return res;
+	}
 };
 // 区域和检索 - 数组不可变
 class NumArray {
@@ -1311,5 +1324,7 @@ public:
 int main()
 {
 	Solution solve;
-	cout << solve.getMoneyAmount2(5);
+
+	vector<int> A = { 1, 1, 1, 1 };
+	cout << solve.numberOfArithmeticSlices(A);
 }
