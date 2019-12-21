@@ -8,7 +8,6 @@
 #include <algorithm>
 using namespace std;
 
-
 struct ListNode {
 	int val;
 	ListNode* next;
@@ -439,18 +438,20 @@ public:
 	}
 	// 无重复串长度
 	int lengthOfLongestSubstring(string s) {
-		unsigned int length = 0;
+		unsigned int length = 0, size = 0;
 		vector<char> ele;
 		for (auto i : s) {
 			if (find(ele.begin(), ele.end(), i) == ele.end()) {
 				ele.push_back(i);
+				size = ele.size();
 				continue;
 			}
-			length = max(length, ele.size());
+			length = max(length, size);
 			ele.erase(ele.begin(), find(ele.begin(), ele.end(), i) + 1);
 			ele.push_back(i);
+			size = ele.size();
 		}
-		return max(length, ele.size());
+		return max(length, size);
 	}
 	// atoi(有点麻烦的题, 要考虑各种case
 	int myAtoi(string str) {
@@ -1278,6 +1279,25 @@ public:
 		}
 		return res;
 	}
+	// 分割等和子集
+	bool canPartition(vector<int>& nums) {
+		if (nums.size() <= 1) return false;
+		int length = 0;
+		for (int i : nums) length += i;
+		if (length % 2 != 0) return false;
+		length /= 2;
+		vector<vector<bool>> dp(nums.size(), vector<bool>(length + 1, false));
+		for (int y = 0; y < nums.size(); y++) {
+			for (int x = 1; x <= length; x++) {
+				if (y == 0 && nums[y] == x) {
+					dp[y][x] = true;
+					break;
+				}
+				else if ((y >= 1) && (dp[y - 1][x] || (x > nums[y] && dp[y - 1][x - nums[y]]))) dp[y][x] = true;
+			}
+		}
+		return dp[nums.size() - 1][length];
+	}
 };
 // 区域和检索 - 数组不可变
 class NumArray {
@@ -1324,7 +1344,4 @@ public:
 int main()
 {
 	Solution solve;
-
-	vector<int> A = { 1, 1, 1, 1 };
-	cout << solve.numberOfArithmeticSlices(A);
 }
