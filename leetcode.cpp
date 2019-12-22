@@ -1298,6 +1298,29 @@ public:
 		}
 		return dp[nums.size() - 1][length];
 	}
+	// 反转链表
+	ListNode* reverseList(ListNode* head) {
+		ListNode* p1 = head, * p2 = head, * p3 = head;
+		if (p1 == NULL || p1->next == NULL) return p1;
+		p2 = p1->next;
+		if (p2->next == NULL) {
+			int temp = p1->val;
+			p1->val = p2->val;
+			p2->val = temp;
+			return p1;
+		}
+		p3 = p2->next;
+		p1->next = NULL;
+		while (p3 != NULL) {
+			p2->next = p1;
+			p1 = p2;
+			p2 = p3;
+			p3 = p3->next;
+		}
+		p2->next = p1;
+		p1 = p2;
+		return p1;
+	}
 };
 // 区域和检索 - 数组不可变
 class NumArray {
