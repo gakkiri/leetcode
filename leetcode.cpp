@@ -1321,6 +1321,20 @@ public:
 		p1 = p2;
 		return p1;
 	}
+	// 最后一个单词的长度
+	int lengthOfLastWord(string s) {
+		int res = 0;
+		bool is_word = false;
+		for (int i = s.length() - 1; i >= 0; i--) {
+			if (s[i] == ' ' && !is_word) continue;
+			if (s[i] != ' ') {
+				is_word = true;
+				++res;
+			}
+			else if (is_word) return res;
+		}
+		return res;
+	}
 };
 // 区域和检索 - 数组不可变
 class NumArray {
@@ -1367,4 +1381,5 @@ public:
 int main()
 {
 	Solution solve;
+
 }
