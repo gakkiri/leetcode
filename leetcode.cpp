@@ -1335,6 +1335,30 @@ public:
 		}
 		return res;
 	}
+	// 反转字符串
+	void reverseString(vector<char>& s) {
+		if (s.size() >= 2) {
+			int i = 0, j = s.size() - 1;
+			char temp;
+			while (i < j) {
+				temp = s[i];
+				s[i] = s[j];
+				s[j] = temp;
+				++i;
+				--j;
+			}
+		}
+	}
+	// 只出现一次的数字, 空间复杂度O(1)
+	int singleNumber(vector<int>& nums) {
+		sort(nums.begin(), nums.end());
+		for (int i = 1; i < nums.size() - 1; i++) {
+			if (i == 1 && nums[i - 1] < nums[i]) return nums[0];
+			else if (i == nums.size() - 2 && nums[i] < nums[i + 1]) return nums[i + 1];
+			if (nums[i - 1] < nums[i] && nums[i] < nums[i + 1]) return nums[i];
+		}
+		return 0;
+	}
 };
 // 区域和检索 - 数组不可变
 class NumArray {
