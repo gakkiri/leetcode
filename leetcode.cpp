@@ -1369,6 +1369,40 @@ public:
 		}
 		return area;
 	}
+	// 简化路径
+	string simplifyPath(string path) {
+		path += "/";
+		string dir;
+		stack<string> st;
+		for (auto i : path) {
+			if (i == '/' && dir.length() == 0) {
+				continue;
+			}
+			else if (i != '/'){
+				dir += i;
+			}
+			else if (i == '/' && dir.length() != 0){
+				if (dir == ".." && !st.empty()) {
+					st.pop();
+					dir.clear();
+				}
+				if ((dir == ".." && st.empty()) || dir == ".") {
+					dir.clear();
+				}
+				else if (dir != ""){
+					st.push(dir);
+					dir.clear();
+				}
+			}
+		}
+		string res;
+		while (!st.empty()) {
+			res = "/" + st.top() + res;
+			st.pop();
+		}
+		if (res == "") res = "/";
+		return res;
+	}
 };
 // 区域和检索 - 数组不可变
 class NumArray {
@@ -1416,4 +1450,6 @@ int main()
 {
 	Solution solve;
 
+	string path = "/a//b////c/d//././/..";
+	cout << solve.simplifyPath(path);
 }
