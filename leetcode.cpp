@@ -1403,6 +1403,48 @@ public:
 		if (res == "") res = "/";
 		return res;
 	}
+	// 相同的树
+	bool isSameTree(TreeNode* p, TreeNode* q) {
+		if ((p == NULL && q != NULL) || (p != NULL && q == NULL)) return false;
+		else if (p != NULL && q != NULL && p->val != q->val) return false;
+		if (p == NULL && q == NULL) return true;
+
+		return isSameTree(p->left, q->left) && isSameTree(p->right, q->right);
+	}
+	// 对称二叉树
+	// 跟相同树差不多, 只是一个优先走左, 一个优先走右
+	bool isSymmetric(TreeNode* root) {
+		TreeNode* l = root, * r = root;
+		return func(l, r);
+	}
+	bool func(TreeNode* l, TreeNode* r) {
+		if ((l == NULL && r != NULL) || (l != NULL && r == NULL)) return false;
+		else if (l != NULL && r != NULL && l->val != r->val) return false;
+		if (l == NULL && r == NULL) return true;
+
+		return func(l->left, r->right) && func(l->right, r->left);
+	}
+	// 从前序和中序遍历序列构造二叉树
+	TreeNode* buildTree(vector<int>& preorder, vector<int>& inorder) {
+		if (preorder.size() == 0 || inorder.size() == 0) return NULL;
+		else if (preorder.size() == 1 || inorder.size() == 1) return new TreeNode(preorder[0]);
+
+		TreeNode* root = new TreeNode(preorder[0]);
+		int root_pos = 0;
+		for (; root_pos < inorder.size(); root_pos++) {
+			if (inorder[root_pos] == preorder[0]) break;
+		}
+
+		vector<int> left_in(inorder.begin(), inorder.begin() + root_pos);
+		vector<int> left_pre(preorder.begin() + 1, preorder.begin() + left_in.size() + 1);
+		root->left = buildTree(left_pre, left_in);
+
+		vector<int> right_in(inorder.begin() + root_pos + 1, inorder.end());
+		vector<int> right_pre(preorder.end() - right_in.size(), preorder.end());
+		root->right = buildTree(right_pre, right_in);
+
+		return root;
+	}
 };
 // 区域和检索 - 数组不可变
 class NumArray {
@@ -1450,6 +1492,11 @@ int main()
 {
 	Solution solve;
 
-	string path = "/a//b////c/d//././/..";
-	cout << solve.simplifyPath(path);
+	vector<int> a = { 3, 9, 15 };
+	vector<int> b = { 9, 3, 15 };
+	TreeNode* root = solve.buildTree(a, b);
+
+	TreeNode* p = root;
+	cout << p->val << p->left->val << p->right->val;
+
 }
