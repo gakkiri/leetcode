@@ -1425,6 +1425,7 @@ public:
 		return func(l->left, r->right) && func(l->right, r->left);
 	}
 	// 从前序和中序遍历序列构造二叉树
+	// 多写一个递归函数可以节省很多时空, 思路是一样的
 	TreeNode* buildTree(vector<int>& preorder, vector<int>& inorder) {
 		if (preorder.size() == 0 || inorder.size() == 0) return NULL;
 		else if (preorder.size() == 1 || inorder.size() == 1) return new TreeNode(preorder[0]);
@@ -1444,6 +1445,41 @@ public:
 		root->right = buildTree(right_pre, right_in);
 
 		return root;
+	}
+	// 将有序数组转换为二叉搜索树
+	// 二叉搜索树的中序遍历为有序数组, 利用这一点递归, 每次root为中位数
+	TreeNode* sortedArrayToBST(vector<int>& nums) {
+		return sortedArrayToBST_func(nums, 0, nums.size() - 1);
+	}
+	TreeNode* sortedArrayToBST_func(vector<int>& nums, int left, int right) {
+		if (left > right) return NULL;
+
+		int root_idx = (left + right) / 2;
+		TreeNode* res = new TreeNode(nums[root_idx]);
+
+		res->left = sortedArrayToBST_func(nums, left, root_idx - 1);
+		res->right = sortedArrayToBST_func(nums, root_idx + 1, right);
+		return res;
+	}
+	// 有序链表转换二叉搜索树
+	TreeNode* sortedListToBST(ListNode* head) {
+		vector<int> nums;
+		ListNode* p = head;
+		while (p != NULL) {
+			nums.push_back(p->val);
+			p = p->next;
+		}
+		return sortedListToBST_func(nums, 0, nums.size() - 1);
+	}
+	TreeNode* sortedListToBST_func(vector<int>& nums, int left, int right) {
+		if (left > right) return NULL;
+
+		int root_idx = (left + right) / 2;
+		TreeNode * res = new TreeNode(nums[root_idx]);
+
+		res->left = sortedArrayToBST_func(nums, left, root_idx - 1);
+		res->right = sortedArrayToBST_func(nums, root_idx + 1, right);
+		return res;
 	}
 };
 // 区域和检索 - 数组不可变
@@ -1493,10 +1529,4 @@ int main()
 	Solution solve;
 
 	vector<int> a = { 3, 9, 15 };
-	vector<int> b = { 9, 3, 15 };
-	TreeNode* root = solve.buildTree(a, b);
-
-	TreeNode* p = root;
-	cout << p->val << p->left->val << p->right->val;
-
 }
