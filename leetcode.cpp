@@ -1481,6 +1481,47 @@ public:
 		res->right = sortedArrayToBST_func(nums, root_idx + 1, right);
 		return res;
 	}
+	// 验证二叉搜索树
+	// 二叉搜索树性质: 中序遍历为升序数组
+	bool isValidBST(TreeNode* root) {
+		string nums = isValidBST_func(root);
+		string num;
+		long cur_num = LONG_MIN;
+		for (char i : nums) {
+			if (i == ' ' && num.length() != 0) {
+				if (cur_num < atoi(num.c_str())) cur_num = atoi(num.c_str());
+				else return false;
+				num.clear();
+			}
+			else if (i != ' ') num += i;
+		}
+		return true;
+	}
+	string isValidBST_func(TreeNode* root) {
+		if (root == NULL) return " ";
+		return isValidBST_func(root->left) + " " + to_string(root->val) + " " + isValidBST_func(root->right);
+	}
+	// 二叉树的中序遍历
+	// 同上, 小修小改即可
+	// 利用栈的方法: https://leetcode-cn.com/problems/binary-tree-inorder-traversal/solution/die-dai-fa-by-jason-2/
+	// 非常值得学习
+	vector<int> inorderTraversal(TreeNode* root) {
+		vector<int> res;
+		string nums = inorderTraversal_func(root);
+		string num;
+		for (char i : nums) {
+			if (i == ' ' && num.length() != 0) {
+				res.push_back(atoi(num.c_str()));
+				num.clear();
+			}
+			else if (i != ' ') num += i;
+		}
+		return res;
+	}
+	string inorderTraversal_func(TreeNode * root) {
+		if (root == NULL) return " ";
+		return inorderTraversal_func(root->left) + " " + to_string(root->val) + " " + inorderTraversal_func(root->right);
+	}
 };
 // 区域和检索 - 数组不可变
 class NumArray {
@@ -1528,5 +1569,8 @@ int main()
 {
 	Solution solve;
 
-	vector<int> a = { 3, 9, 15 };
+	long long a = INT_MIN - 1;
+	cout << a << endl;
+	cout << INT_MIN;
+	
 }
