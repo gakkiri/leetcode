@@ -1503,7 +1503,7 @@ public:
 	}
 	// 二叉树的中序遍历
 	// 同上, 小修小改即可
-	// 利用栈的方法: https://leetcode-cn.com/problems/binary-tree-inorder-traversal/solution/die-dai-fa-by-jason-2/
+	// 另外, 利用栈的方法: https://leetcode-cn.com/problems/binary-tree-inorder-traversal/solution/die-dai-fa-by-jason-2/
 	// 非常值得学习
 	vector<int> inorderTraversal(TreeNode* root) {
 		vector<int> res;
@@ -1521,6 +1521,41 @@ public:
 	string inorderTraversal_func(TreeNode * root) {
 		if (root == NULL) return " ";
 		return inorderTraversal_func(root->left) + " " + to_string(root->val) + " " + inorderTraversal_func(root->right);
+	}
+	// 路径总和
+	// 典型的DFS
+	bool hasPathSum(TreeNode* root, int sum) {
+		if (root == NULL) return false;
+		return hasPathSum_func(root, sum);
+	}
+	bool hasPathSum_func(TreeNode * root, int sum) {
+		if (root == NULL) return false;
+		if (root != NULL) sum -= root->val;
+		if (root->left == NULL && root->right == NULL && sum == 0) return true;
+		if (root->left == NULL && root->right == NULL && sum != 0) return false;
+
+		return hasPathSum_func(root->left, sum) || hasPathSum_func(root->right, sum);
+	}
+	// 路径总和II
+	// DFS+条件筛选
+	vector<vector<int>> pathSum(TreeNode* root, int sum) {
+		vector<vector<int>> res;
+		vector<int> path;
+		pathSum_func(root, res, path, sum);
+		return res;
+	}
+	void pathSum_func(TreeNode * root, vector<vector<int>>& res, vector<int> path, const int sum) {
+		if (root != NULL && root->left == NULL && root->right == NULL) {
+			path.push_back(root->val);
+			int s = 0;
+			for (int i : path) s += i;
+			if (s == sum) res.push_back(path);
+		}
+		else if (root != NULL) {
+			path.push_back(root->val);
+			pathSum_func(root->left, res, path, sum);
+			pathSum_func(root->right, res, path, sum);
+		}
 	}
 };
 // 区域和检索 - 数组不可变
@@ -1569,8 +1604,5 @@ int main()
 {
 	Solution solve;
 
-	long long a = INT_MIN - 1;
-	cout << a << endl;
-	cout << INT_MIN;
-	
+
 }
