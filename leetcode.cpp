@@ -1557,6 +1557,27 @@ public:
 			pathSum_func(root->right, res, path, sum);
 		}
 	}
+	// 二叉树展开为链表
+	// 原地操作, 非递归
+	void flatten(TreeNode* root) {
+		if (root == NULL) return;
+		TreeNode* p, * p_right, * _root = root;
+		while (_root != NULL) {
+			p = _root;
+			p_right = NULL;
+			if (p->left == NULL) {
+				_root = _root->right;
+				continue;
+			}
+			p = p->left;
+			while (p->right != NULL) p = p->right;
+			if (_root->right != NULL) p_right = _root->right;
+			_root->right = _root->left;
+			_root->left = NULL;
+			p->right = p_right;
+			_root = _root->right;
+		}
+	}
 };
 // 区域和检索 - 数组不可变
 class NumArray {
@@ -1604,5 +1625,5 @@ int main()
 {
 	Solution solve;
 
-
+	
 }
