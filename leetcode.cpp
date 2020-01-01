@@ -1578,6 +1578,93 @@ public:
 			_root = _root->right;
 		}
 	}
+	// 判断子序列
+	bool isSubsequence(string s, string t) {
+		int len_s = s.length(), len_t = t.length();
+		if (s == "") return true;
+		else if (len_s > len_t || len_t == 0) return false;
+		stack<char> _stack;
+		for (auto i : s) _stack.push(i);
+		for (int i = len_t - 1; i >= 0; i--) {
+			if (_stack.top() == t[i]) _stack.pop();
+			if (_stack.empty()) return true;
+		}
+		return false;
+	}
+	// Pow(x, n)
+	// 快速幂, 否则超时
+	double myPow(double x, int n) {
+		bool is_neg = false;
+		if (n < 0) {
+			n = (long)n * -1;
+			is_neg = true;
+		}
+		else n = (long)n;
+		double res = myPow_func(x, n);
+		if (is_neg) return 1 / res;
+		else return res;
+	}
+	double myPow_func(double x, long n) {
+		if (1 / x == 0) return 0;
+		if (n == 0 || x == 1) return 1;
+		if (n == 1) return x;
+		double _x = x;
+		x *= x;
+		return myPow(x, n / 2) * myPow(_x, n % 2);
+	}
+	// 两数相除
+	// 麻烦的地方在边界判断
+	int divide(int dividend, int divisor) {
+		int is_neg = 1;
+		if ((dividend > 0 && divisor < 0) || (dividend < 0 && divisor > 0)) is_neg = -1;
+
+		if (dividend > 0) dividend *= -1;
+		if (divisor > 0) divisor *= -1;
+
+		if (dividend == 0) return 0;
+		long factor = 1;
+		while (dividend < (divisor * factor)) factor += factor;
+		if (-1 * factor == INT_MIN && is_neg == 1) return INT_MAX;
+		long left_factor = factor / 2;
+		long res = left_factor + divide_func(0, factor - left_factor, dividend, divisor, left_factor) - 1;
+		return is_neg * res;
+	}
+	long divide_func(long left, long right, int target, int divisor, long left_factor) {
+		if (left > right) return left;
+		int center = (left + right) / 2;
+
+		if (target > (divisor * (left_factor + center))) {
+			return divide_func(left, center - 1, target, divisor, left_factor);
+		}
+		else {
+			return divide_func(center + 1, right, target, divisor, left_factor);
+		}
+	}
+	// 在排序数组中查找元素的第一个和最后一个位置
+	// 二分查找搜索左右边界
+	vector<int> searchRange(vector<int>& nums, int target) {
+		vector<int> res(2, -1);
+		int length = nums.size();
+		int left = 0, right = length - 1;
+		if (length == 0) return res;
+		// 找左
+		while (left < right) {
+			int center = (left + right) / 2;
+			if (nums[center] >= target) right = center;
+			else if (nums[center] < target) left = center + 1;
+		}
+		if (nums[left] != target) return res;
+		res[0] = left;
+		// 找右
+		left = 0, right = length;
+		while (left < right) {
+			int center = (left + right) / 2;
+			if (nums[center] <= target) left = center + 1;
+			else if (nums[center] > target) right = center;
+		}
+		res[1] = left - 1;
+		return res;
+	}
 };
 // 区域和检索 - 数组不可变
 class NumArray {
@@ -1625,5 +1712,7 @@ int main()
 {
 	Solution solve;
 
-	
+	vector<int> a = { 1 };
+	vector<int> b = solve.searchRange(a, 1);
+	cout << b[0] << " " << b[1];
 }
