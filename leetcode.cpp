@@ -21,6 +21,17 @@ struct TreeNode {
 	TreeNode(int x) : val(x), left(NULL), right(NULL) {}
 };
 
+struct Node {
+	int val;
+	Node* left;
+	Node* right;
+	Node* next;
+	Node() : val(0), left(NULL), right(NULL), next(NULL) {}
+	Node(int _val) : val(_val), left(NULL), right(NULL), next(NULL) {}
+	Node(int _val, Node* _left, Node* _right, Node* _next)
+		: val(_val), left(_left), right(_right), next(_next) {}
+};
+
 
 class Solution {
 public:
@@ -1664,6 +1675,23 @@ public:
 		}
 		res[1] = left - 1;
 		return res;
+	}
+	// 填充每个节点的下一个右侧节点指针
+	// root->left->next = root->right; root->right->next = root->next->left;
+	Node* connect(Node* root) {
+		if (root == NULL) return NULL;
+		return connect_func(root);
+	}
+	Node* connect_func(Node* root) {
+		if (root->left == NULL) return root;
+
+		root->left->next = root->right;
+		if (root->next != NULL) root->right->next = root->next->left;
+
+		root->left = connect_func(root->left);
+		root->right = connect_func(root->right);
+
+		return root;
 	}
 };
 // 区域和检索 - 数组不可变
