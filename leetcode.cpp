@@ -1693,6 +1693,21 @@ public:
 
 		return root;
 	}
+	// 二叉树的层次遍历
+	vector<vector<int>> levelOrder(TreeNode* root) {
+		vector<vector<int>> res;
+		levelOrder_func(root, res, 0);
+		return res;
+	}
+	void levelOrder_func(TreeNode* root, vector<vector<int>>& res, int layer) {
+		if (root != NULL && res.size() == layer) res.push_back({ root->val });
+		else if (root != NULL && res.size() > layer) res[layer].push_back(root->val);
+		if (root == NULL) return;
+		++layer;
+
+		levelOrder_func(root->left, res, layer);
+		levelOrder_func(root->right, res, layer);
+	}
 };
 // 区域和检索 - 数组不可变
 class NumArray {
