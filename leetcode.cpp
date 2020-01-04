@@ -1708,6 +1708,21 @@ public:
 		levelOrder_func(root->left, res, layer);
 		levelOrder_func(root->right, res, layer);
 	}
+	// 二叉树的锯齿形层次遍历
+	vector<vector<int>> zigzagLevelOrder(TreeNode* root) {
+		vector<vector<int>> res;
+		zigzagLevelOrder_func(root, res, 0);  // 奇数从右向左, 偶数从左向右
+		return res;
+	}
+	void zigzagLevelOrder_func(TreeNode* root, vector<vector<int>>& res, int layer) {
+		if (root == NULL) return;
+		if (res.size() == layer) res.push_back({});
+		if (layer % 2 == 0) res[layer].push_back(root->val);
+		else res[layer].insert(res[layer].begin(), root->val);
+		++layer;
+		zigzagLevelOrder_func(root->left, res, layer);
+		zigzagLevelOrder_func(root->right, res, layer);
+	}
 };
 // 区域和检索 - 数组不可变
 class NumArray {
