@@ -1723,6 +1723,25 @@ public:
 		zigzagLevelOrder_func(root->left, res, layer);
 		zigzagLevelOrder_func(root->right, res, layer);
 	}
+	// 求根到叶子节点数字之和
+	int sumNumbers(TreeNode* root) {
+		int res = 0;
+		string num = "";
+		if (root == NULL) return res;
+		sumNumbers_func(root, res, num);
+		return res;
+	}
+	void sumNumbers_func(TreeNode * root, int& res, string num) {
+		if (root == NULL) return;
+		if (root->left == NULL && root->right == NULL) {
+			num += to_string(root->val);
+			res += atoi(num.c_str());
+			return;
+		}
+		num += to_string(root->val);
+		sumNumbers_func(root->left, res, num);
+		sumNumbers_func(root->right, res, num);
+	}
 };
 // 区域和检索 - 数组不可变
 class NumArray {
