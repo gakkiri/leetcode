@@ -1731,7 +1731,7 @@ public:
 		sumNumbers_func(root, res, num);
 		return res;
 	}
-	void sumNumbers_func(TreeNode * root, int& res, string num) {
+	void sumNumbers_func(TreeNode* root, int& res, string num) {
 		if (root == NULL) return;
 		if (root->left == NULL && root->right == NULL) {
 			num += to_string(root->val);
@@ -1741,6 +1741,23 @@ public:
 		num += to_string(root->val);
 		sumNumbers_func(root->left, res, num);
 		sumNumbers_func(root->right, res, num);
+	}
+	// 填充每个节点的下一个右侧节点指针 II
+	Node* connect2(Node* root) {
+		if (root and (root->left or root->right)) {
+			if (root->left and root->right) root->left->next = root->right;
+
+			Node* p_root_chl = root->right ? root->right : root->left;
+			Node* p = root->next;
+			while (p and not (p->left or p->right)) p = p->next;
+			if (p) p_root_chl->next = p->left ? p->left : p->right;
+			else p_root_chl->next = NULL;
+
+			// 必须先右后左, 否则右边没连上会导致搜索非空子节点的时候提前停止(画个图就知道了
+			connect2(root->right);
+			connect2(root->left);
+		}
+		return root;
 	}
 };
 // 区域和检索 - 数组不可变
@@ -1789,7 +1806,5 @@ int main()
 {
 	Solution solve;
 
-	vector<int> a = { 1 };
-	vector<int> b = solve.searchRange(a, 1);
-	cout << b[0] << " " << b[1];
+	
 }
