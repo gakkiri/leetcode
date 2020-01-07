@@ -1759,6 +1759,24 @@ public:
 		}
 		return root;
 	}
+	// 全排列
+	// 稍微有点想不通
+	vector<vector<int>> permute(vector<int>& nums) {
+		vector<vector<int>> res;
+		permute_func(res, nums, nums.size() - 1, 0);
+		return res;
+	}
+	void permute_func(vector<vector<int>>& res, vector<int> nums, const int max_layer, int first) {
+		if (first == max_layer) {
+			res.push_back(nums);
+			return;
+		}
+		for (int i = first; i <= max_layer; i++) {
+			swap(nums[i], nums[first]);
+			permute_func(res, nums, max_layer, first + 1);
+			swap(nums[i], nums[first]);
+		}
+	}
 };
 // 区域和检索 - 数组不可变
 class NumArray {
