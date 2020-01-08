@@ -1760,7 +1760,6 @@ public:
 		return root;
 	}
 	// 全排列
-	// 稍微有点想不通
 	vector<vector<int>> permute(vector<int>& nums) {
 		vector<vector<int>> res;
 		permute_func(res, nums, nums.size() - 1, 0);
@@ -1776,6 +1775,47 @@ public:
 			permute_func(res, nums, max_layer, first + 1);
 			swap(nums[i], nums[first]);
 		}
+	}
+	// 搜索旋转排序数组
+	// 相当于nums中包含两段升序数组, 并且段1必定大于段2
+	// 先找段1段2分界点, 确定target所属的段, 再二分即可
+	int search(vector<int>& nums, int target) {
+		int size = nums.size();
+		if (size == 0) return -1;
+		if (size == 1) return nums[0] == target ? 0 : -1;
+		if (target == nums[0]) return 0;
+		else if (target == nums[size - 1]) return size - 1;
+		if (nums[0] > nums[size - 1] and target < nums[0] and target > nums[size - 1]) return -1;
+		if (nums[0] < nums[size - 1]) return b_search(nums, target, 0, size - 1);
+		// 找分界点(最小值点
+		int left = 0, right = size - 1, center;
+		while (left <= right) {
+			center = (left + right) / 2;
+			if (nums[center] > nums[center + 1]) break;
+			if (nums[center] < nums[right] and nums[center] >= nums[left]) left = center + 1;
+			else if (nums[center] > nums[left] and nums[center] > nums[right]) left = center + 1;
+			else right = center - 1;
+		}
+		++center;
+		// 确定范围
+		int res;
+		if (target < nums[size - 1]) { // 右
+			res = b_search(nums, target, center, size - 1);
+		}
+		else if (target > nums[0]) { // 左
+			res = b_search(nums, target, 0, center - 1);
+		}
+		return res;
+	}
+	int b_search(const vector<int> & nums, const int target, int left, int right) {
+		int center;
+		while (left <= right) {
+			center = (left + right) / 2;
+			if (nums[center] == target) return center;
+			else if (nums[center] > target) right = center - 1;
+			else if (nums[center] < target) left = center + 1;
+		}
+		return -1;
 	}
 };
 // 区域和检索 - 数组不可变
