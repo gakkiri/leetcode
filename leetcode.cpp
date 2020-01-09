@@ -1817,6 +1817,48 @@ public:
 		}
 		return -1;
 	}
+	// 字符串相加
+	string addStrings(string num1, string num2) {
+		int len1 = num1.length(), len2 = num2.length();
+		string res;
+		if (len1 < len2) {
+			for (int i = 0; i < len2 - len1; i++) num1.insert(num1.begin(), '0');
+		}
+		if (len1 > len2) {
+			for (int i = 0; i < len1 - len2; i++) num2.insert(num2.begin(), '0');
+		}
+		char add1 = '0';
+		for (int i = max(len1, len2) - 1; i >= 0; i--) {
+			int n1 = num1[i] - '0', n2 = num2[i] - '0';
+			int n = n1 + n2;
+			if (add1 == '0') n += (add1 - '0');
+			else n += (add1 - '0');
+			string add0 = to_string(n % 10);
+			add1 = (n / 10) + '0';
+			res = add0 + res;
+		}
+		if (add1 != '0') res = "1" + res;
+		return res;
+	}
+	// 字符串相乘
+	// 略复杂
+	string multiply(string num1, string num2) {
+		int len1 = num1.length(), len2 = num2.length();
+		string res(len1 + len2, '0');
+		for (int i = len2 - 1; i >= 0; i--) {
+			for (int j = len1 - 1; j >= 0; j--) {
+				int n = (res[i + j + 1] - '0') + (num1[j] - '0') * (num2[i] - '0');
+				res[i + j + 1] = n % 10 + '0';
+				res[i + j] += n / 10;
+			}
+		}
+		for (int i = 0; i < len1 + len2; i++) {
+			if (res[i] != '0') {
+				return res.substr(i);
+			}
+		}
+		return "0";
+	}
 };
 // 区域和检索 - 数组不可变
 class NumArray {
@@ -1864,5 +1906,4 @@ int main()
 {
 	Solution solve;
 
-	
 }
