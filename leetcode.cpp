@@ -1859,6 +1859,24 @@ public:
 		}
 		return "0";
 	}
+	// 验证回文串
+	bool isPalindrome(string s) {
+		int i = 0;
+		while (i < s.size()) {
+			if (s[i] >= 'A' and s[i] <= 'Z') s[i] += 32;  // 大写转小写
+			if ((s[i] < 'a' or s[i] > 'z') and (s[i] < '0' or s[i] > '9')) { // 非数字非字母
+				s.erase(s.begin() + i, s.begin() + i + 1);  // 删掉
+				--i;
+			}
+			++i;
+		}	
+		string s1 = s.substr(0, i / 2);
+		string s2 = s.substr((i / 2) + i % 2, i);
+		if (s1.size() != s2.size()) return false;
+		std::reverse(s2.begin(), s2.end());
+		if (s1 == s2) return true;
+		return false;
+	}
 };
 // 区域和检索 - 数组不可变
 class NumArray {
@@ -1906,4 +1924,6 @@ int main()
 {
 	Solution solve;
 
+	string a = "-P";
+	cout << solve.isPalindrome(a);
 }
