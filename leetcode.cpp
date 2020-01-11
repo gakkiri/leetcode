@@ -1877,6 +1877,27 @@ public:
 		if (s1 == s2) return true;
 		return false;
 	}
+	// 反转字符串中的元音字母
+	string reverseVowels(string s) {
+		int left = 0, right = s.size() - 1;
+		while (left < right) {
+			while (left < right and (not is_vowel(s[left]))) ++left;
+			while (right >= 0 and (not is_vowel(s[right]))) --right;
+			if (left >= right) break;
+			swap(s[left], s[right]);
+			++left;
+			--right;
+		}
+		return s;
+	}
+	bool is_vowel(char c) {
+		vector<char> vowels = { 'a', 'e', 'i', 'o', 'u' };
+		for (auto i : vowels) {
+			if ((c < 'a' or c > 'z') and (c < 'A' or c > 'Z')) continue;
+			if (c == i or c + 32 == i) return true;
+		}
+		return false;
+	}
 };
 // 区域和检索 - 数组不可变
 class NumArray {
@@ -1924,6 +1945,6 @@ int main()
 {
 	Solution solve;
 
-	string a = "-P";
-	cout << solve.isPalindrome(a);
+	string a = ".,";
+	cout << solve.reverseVowels(a);
 }
