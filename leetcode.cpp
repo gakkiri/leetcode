@@ -1898,6 +1898,15 @@ public:
 		}
 		return false;
 	}
+	// 宝石与石头
+	// 用ASCII码作为哈希表索引
+	int numJewelsInStones(string J, string S) {
+		int hash[128] = { 0 };
+		for (auto i : J) hash[i] = 1;
+		int res = 0;
+		for (auto i : S) res += hash[i];
+		return res;
+	}
 };
 // 区域和检索 - 数组不可变
 class NumArray {
