@@ -1907,6 +1907,25 @@ public:
 		for (auto i : S) res += hash[i];
 		return res;
 	}
+	// 字母异位词分组
+	// 还是哈希
+	vector<vector<string>> groupAnagrams(vector<string>& strs) {
+		vector<vector<string>> res;
+		vector<string> recoder;
+		for (string word : strs) {
+			string temp = word;
+			sort(temp.begin(), temp.end());
+			vector<string>::iterator iter = std::find(recoder.begin(), recoder.end(), temp);
+			if (iter == recoder.end()) {
+				res.push_back({ word });
+				recoder.push_back(temp);
+			}
+			else {
+				res[std::distance(recoder.begin(), iter)].push_back(word);
+			}
+		}
+		return res;
+	}
 };
 // 区域和检索 - 数组不可变
 class NumArray {
@@ -1954,6 +1973,12 @@ int main()
 {
 	Solution solve;
 
-	string a = ".,";
-	cout << solve.reverseVowels(a);
+	vector<string> a = { "eat","tea","bob","ate","boo","bat" };
+	vector<vector<string>> r = solve.groupAnagrams(a);
+	for (auto set : r) {
+		for (auto i : set) {
+			cout << i << ", ";
+		}
+		cout << endl;
+	}
 }
