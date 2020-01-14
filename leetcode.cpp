@@ -1926,6 +1926,26 @@ public:
 		}
 		return res;
 	}
+	// 复原IP地址
+	vector<string> restoreIpAddresses(string s) {
+		vector<string> res;
+		if (s.size() > 3 * 4) return res;
+		string ip;
+		restoreIpAddresses_func(res, s, ip, 0);
+		return res;
+	}
+	void restoreIpAddresses_func(vector<string>& res, string s, string ip, int n) {
+		if (n == 4 and s.empty()) {
+			res.push_back(ip);
+			return;
+		}
+		for (int i = 1; i < 4; i++) {
+			if (s.size() < i) break;
+			int temp = stoi(s.substr(0, i));  // 细节1: 先转数字, 可以去掉字符串开头的0
+			if (temp > 255 or to_string(temp).size() != i) continue;  // 细节2: 去掉开头的0后再转字符串, 如果长度发生变化则为无效ip段
+			restoreIpAddresses_func(res, s.substr(i), ip + to_string(temp) + (n == 3 ? "" : "."), n + 1);
+		}
+	}
 };
 // 区域和检索 - 数组不可变
 class NumArray {
@@ -1972,13 +1992,8 @@ public:
 int main()
 {
 	Solution solve;
-
-	vector<string> a = { "eat","tea","bob","ate","boo","bat" };
-	vector<vector<string>> r = solve.groupAnagrams(a);
-	for (auto set : r) {
-		for (auto i : set) {
-			cout << i << ", ";
-		}
-		cout << endl;
-	}
+	
+	string s = "010010";
+	vector<string> a = solve.restoreIpAddresses(s);
+	for (auto i : a) cout << i << endl;
 }
