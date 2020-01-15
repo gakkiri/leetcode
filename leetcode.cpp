@@ -2,6 +2,7 @@
 #include <string>
 #include <vector>
 #include <unordered_map>
+#include <map>
 #include <stack> 
 #include <queue>
 #include <array>
@@ -1934,7 +1935,7 @@ public:
 		restoreIpAddresses_func(res, s, ip, 0);
 		return res;
 	}
-	void restoreIpAddresses_func(vector<string>& res, string s, string ip, int n) {
+	void restoreIpAddresses_func(vector<string>& res, string s, string ip, int n) {  
 		if (n == 4 and s.empty()) {
 			res.push_back(ip);
 			return;
@@ -1945,6 +1946,49 @@ public:
 			if (temp > 255 or to_string(temp).size() != i) continue;  // 细节2: 去掉开头的0后再转字符串, 如果长度发生变化则为无效ip段
 			restoreIpAddresses_func(res, s.substr(i), ip + to_string(temp) + (n == 3 ? "" : "."), n + 1);
 		}
+	}
+	// 多数元素
+	int majorityElement(vector<int>& nums) {
+		map<int, int> hash;
+		int  res, res_num = INT_MIN;
+		for (auto i : nums) {
+			++hash[i];
+			if (res_num < hash[i]) {
+				res_num = hash[i];
+				res = i;
+			}
+		}
+		return res;
+	}
+	// 回文链表
+	// 快慢指针
+	bool isPalindrome(ListNode* head) {
+		if (head == NULL or head->next == NULL) return true;
+		ListNode* fast_p = head, * slow_p = head;
+		stack<int> s;
+		int length = 1;
+		while (fast_p->next != NULL) {
+			fast_p = fast_p->next;
+			++length;
+			if (fast_p->next != NULL) {
+				fast_p = fast_p->next;
+				++length;
+			}
+			else break;
+			s.push(slow_p->val);
+			slow_p = slow_p->next;
+		}
+		length = length % 2;
+		if (length == 0) s.push(slow_p->val);
+		slow_p = slow_p->next;
+		while (slow_p) {
+			if (s.top() == slow_p->val) {
+				s.pop();
+				slow_p = slow_p->next;
+			}
+			else return false;
+		}
+		return true;
 	}
 };
 // 区域和检索 - 数组不可变
