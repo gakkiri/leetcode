@@ -1990,6 +1990,22 @@ public:
 		}
 		return true;
 	}
+	// 跳跃游戏
+	// 从后往前, 如果全为0则必定true
+	// 如果遇到0, 则检查0前面的元素是否有能越过0的步数
+	bool canJump(vector<int>& nums) {
+		if (nums.size() < 2) return true;
+		for (int i = nums.size() - 1; i >= 0; i--) {
+			if (nums[i] == 0) {
+				bool flag = false;
+				for (int j = i - 1; j >= 0; j--) {
+					if ((nums[j] > i - j) or (nums[j] == i - j and i == nums.size() - 1)) flag = true;
+				}
+				if (!flag) return false;
+			}
+		}
+		return true;
+	}
 };
 // 区域和检索 - 数组不可变
 class NumArray {
@@ -2037,7 +2053,7 @@ int main()
 {
 	Solution solve;
 	
-	string s = "010010";
-	vector<string> a = solve.restoreIpAddresses(s);
-	for (auto i : a) cout << i << endl;
+	//vector<int> a = { 2,0,6,9,8,4,5,0,8,9,1,2,9,6,8,8,0,6,3,1,2,2,1,2,6,5,3,1,2,2,6,4,2,4,3,0,0,0,3,8,2,4,0,1,2,0,1,4,6,5,8,0,7,9,3,4,6,6,5,8,9,3,4,3,7,0,4,9,0,9,8,4,3,0,7,7,1,9,1,9,4,9,0,1,9,5,7,7,1,5,8,2,8,2,6,8,2,2,7,5,1,7,9,6 };
+	vector<int> a = { 1,0,1,0 };
+	cout << "result: " << solve.canJump(a);
 }
