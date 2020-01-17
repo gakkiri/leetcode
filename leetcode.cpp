@@ -2006,6 +2006,22 @@ public:
 		}
 		return true;
 	}
+	// 旋转图像
+	// 转置后翻转每行
+	void rotate(vector<vector<int>>& matrix) {
+		int n = matrix.size();
+		for (int y = 0; y < n; y++) {
+			for (int x = y; x < n; x++) {
+				if (x == y) continue;
+				int temp = matrix[y][x];
+				matrix[y][x] = matrix[x][y];
+				matrix[x][y] = temp;
+			}
+		}
+		for (int y = 0; y < n; y++) {
+			std::reverse(matrix[y].begin(), matrix[y].end());
+		}
+	}
 };
 // 区域和检索 - 数组不可变
 class NumArray {
