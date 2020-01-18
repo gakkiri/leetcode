@@ -2022,6 +2022,16 @@ public:
 			std::reverse(matrix[y].begin(), matrix[y].end());
 		}
 	}
+	// 215. 数组中的第K个最大元素
+	// 快排或者堆, 这里是堆
+	int findKthLargest(vector<int>& nums, int k) {
+		priority_queue<int, vector<int>, greater<int>> heap;
+		for (auto num : nums) {
+			heap.push(num);
+			if (heap.size() > k) heap.pop();
+		}
+		return heap.top();
+	}
 };
 // 区域和检索 - 数组不可变
 class NumArray {
