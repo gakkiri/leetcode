@@ -2032,6 +2032,28 @@ public:
 		}
 		return heap.top();
 	}
+	// 56. 合并区间
+	vector<vector<int>> merge(vector<vector<int>>& intervals) {
+		vector<vector<int>> res;
+		if (intervals.empty()) return res;
+		sort(intervals.begin(), intervals.end(), cmp);
+		res.push_back(intervals[0]);
+		for (int i = 1; i < intervals.size(); i++) {
+			vector<int> pre = res[res.size() - 1];
+			if (pre[0] <= intervals[i][0] and pre[1] >= intervals[i][0]) {
+				if (pre[1] < intervals[i][1]) {
+					res[res.size() - 1][1] = intervals[i][1];
+				}
+			}
+			else {
+				res.push_back(intervals[i]);
+			}
+		}
+		return res;
+	}
+	static bool cmp(vector<int>& a, vector<int>& b) {
+		return a[0] < b[0];
+	}
 };
 // 区域和检索 - 数组不可变
 class NumArray {
