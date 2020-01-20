@@ -2054,6 +2054,21 @@ public:
 	static bool cmp(vector<int>& a, vector<int>& b) {
 		return a[0] < b[0];
 	}
+	// 160. 相交链表
+	ListNode* getIntersectionNode(ListNode* headA, ListNode* headB) {
+		unordered_map<ListNode* , int> _map;
+		ListNode* p = headA;
+		while (p != NULL) {
+			++_map[p];
+			p = p->next;
+		}
+		p = headB;
+		while (p != NULL) {
+			if (_map[p] == 1) return p;
+			p = p->next;
+		}
+		return NULL;
+	}
 };
 // 区域和检索 - 数组不可变
 class NumArray {
@@ -2095,13 +2110,41 @@ public:
 		return res;
 	}
 };
+// 155.最小栈
+class MinStack {
+public:
+	/** initialize your data structure here. */
+	MinStack() {
+
+	}
+
+	void push(int x) {
+		stack.push_back(x);
+		_min = min(_min, x);
+	}
+
+	void pop() {
+		stack.erase(stack.end() - 1, stack.end());
+		_min = INT_MAX;
+		for (auto num : stack) _min = min(_min, num);
+	}
+
+	int top() {
+		return stack[stack.size() - 1];
+	}
+
+	int getMin() {
+		return _min;
+	}
+private:
+	vector<int> stack;
+	int _min = INT_MAX;
+};
 
 
 int main()
 {
 	Solution solve;
 	
-	//vector<int> a = { 2,0,6,9,8,4,5,0,8,9,1,2,9,6,8,8,0,6,3,1,2,2,1,2,6,5,3,1,2,2,6,4,2,4,3,0,0,0,3,8,2,4,0,1,2,0,1,4,6,5,8,0,7,9,3,4,6,6,5,8,9,3,4,3,7,0,4,9,0,9,8,4,3,0,7,7,1,9,1,9,4,9,0,1,9,5,7,7,1,5,8,2,8,2,6,8,2,2,7,5,1,7,9,6 };
-	vector<int> a = { 1,0,1,0 };
-	cout << "result: " << solve.canJump(a);
+
 }
