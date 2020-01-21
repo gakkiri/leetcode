@@ -2069,6 +2069,207 @@ public:
 		}
 		return NULL;
 	}
+	// 31.下一个排列
+	// 没做出来, 记一下思路
+	void nextPermutation(vector<int>& nums) {
+		if (nums.size() <= 1) return;  // 元素个数为0, 1的不用处理
+		int j = nums.size() - 1;
+		// 从右往左找, 如果找到有nums[i - 1] < nums[i], 则说明有下一个排列
+		while (j >= 1 and nums[j - 1] >= nums[j]) --j;  // 注意包含等于
+		// 否则完全递减没有下一个排列, 返回递增序列(最小)
+		if (j == 0) {
+			sort(nums.begin(), nums.end());
+			return;
+		}
+		// 有下一列, 则从j的右边找比j大的最小元素
+		int i = nums.size() - 1;
+		while (i >= j and nums[i] <= nums[j - 1]) --i;  // 注意包含等于
+		swap(nums[i], nums[j - 1]);
+		sort(nums.begin() + j, nums.end());
+	}
+	// 226.反转二叉树
+	TreeNode* invertTree(TreeNode* root) {
+		if (root == NULL) return root;
+
+		TreeNode* temp = root->left;
+		root->left = root->right;
+		root->right = temp;
+
+		root->left = invertTree(root->left);
+		root->right = invertTree(root->right);
+
+		return root;
+	}
+	// 461.汉明距离
+	// 异或
+	int hammingDistance(int x, int y) {
+		int temp = x ^ y;
+		int res = 0;
+		while (temp != 0) {
+			if (temp & 1 == 1) ++res;  // 取第一位是否为1
+			temp >>= 1;  // 右移
+		}
+		return res;
+	}
+	// 78.子集
+	vector<vector<int>> subsets(vector<int>& nums) {
+		vector<vector<int>> res;
+		vector<int> temp;
+		subsets_func(res, nums, 0, temp);
+		return res;
+	}
+	void subsets_func(vector<vector<int>>& res,
+					  vector<int>& nums,
+					  int index,
+					  vector<int> temp) {
+		if (index == nums.size()) {
+			res.push_back(temp);
+			return;
+		}
+
+		for (int i = 0; i <= 1; i++) {
+			if (i) {
+				temp.push_back(nums[index]);
+			}
+			subsets_func(res, nums, index + 1, temp);
+		}
+	}
+	// 39.组合总和
+	vector<vector<int>> combinationSum(vector<int>& candidates, int target) {
+		vector<vector<int>> res;
+		vector<int> temp;
+		sort(candidates.begin(), candidates.end());
+		combinationSum_func(candidates, target, res, temp, 0);
+		return res;
+	}
+	void combinationSum_func(vector<int>& candidates,
+							 int target,
+							 vector<vector<int>>& res,
+							 vector<int> temp,
+							 int index) {
+		for (int i = index; i < candidates.size(); i++) {
+			if (target > candidates[i]) {
+				temp.push_back(candidates[i]);
+				combinationSum_func(candidates, target - candidates[i], res, temp, i);
+				temp.pop_back();
+			}
+			else if (target == candidates[i]) {
+				temp.push_back(candidates[i]);
+				res.push_back(temp);
+				break;
+			}
+		}
+		return;
+	}
+	// 200. 岛屿数量
+	int numIslands(vector<vector<char>>& grid) {
+		int res = 0;
+		for (int y = 0; y < grid.size(); y++) {
+			for (int x = 0; x < grid[0].size(); x++) {
+				if (grid[y][x] == '0') continue;
+				// 发现岛屿, DFS遍历整个岛, 并将遍历过的坐标置0
+				++res;
+				dfs(grid, y, x);
+			}
+		}
+		return res;
+	}
+	void dfs(vector<vector<char>>& grid, int y, int x) {
+		if (grid[y][x] == '0') return;
+		grid[y][x] = '0';
+		if (y > 0) dfs(grid, y - 1, x);
+		if (x > 0) dfs(grid, y, x - 1);
+		if (y < grid.size() - 1) dfs(grid, y + 1, x);
+		if (x < grid[0].size() - 1) dfs(grid, y, x + 1);
+		return;
+	}
+	// 75.颜色分类
+	void sortColors(vector<int>& nums) {
+		// 三路快排, 大于1放右, 小于1放左, 等于1不动
+		int index = 0, left = 0, right = nums.size() - 1;
+		// right为2的边界, 所以index超过right就可以结束了
+		while (index <= right) {
+			if (nums[index] == 0) {
+				swap(nums[index++], nums[left++]);
+			}
+			else if (nums[index] == 1) {
+				++index;
+			}
+			else if (nums[index] == 2) {
+				swap(nums[index], nums[right--]);
+			}
+		}
+	}
+	// 739.每日温度
+	// 递减栈
+	vector<int> dailyTemperatures(vector<int>& T) {
+		vector<int> res(T.size(), 0);
+		stack<int> s;
+		for (int i = 0; i < T.size(); i++) {
+			while (!s.empty() and T[i] > T[s.top()]) {
+				int _i = s.top();
+				s.pop();
+				res[_i] = i - _i;
+			}
+			s.push(i);
+		}
+		return res;
+	}
+	// 148.排序链表
+	// 自底向上的并归排序, 写的比较复杂
+	ListNode* sortList(ListNode* head) {
+		ListNode* p = head;
+		int length = 0;
+		while (p) {
+			p = p->next;
+			++length;
+		}
+		if (length <= 1) return head;
+		ListNode* new_head = new ListNode(0);
+		p = head;
+		for (int i = 1; i < length; i *= 2) {
+			ListNode* new_p = new_head;
+			if (new_head->next) p = new_head->next;
+
+			while (p) {
+				ListNode* left = p, *right = cut(p, i);
+				p = cut(right, i);
+
+				new_p->next = merge(left, right);
+				while (new_p->next) new_p = new_p->next;
+			}
+		}
+		return new_head->next;
+	}
+	ListNode* cut(ListNode* head, int n) {  // 从head开始的第n个节点断开
+		ListNode* p = head, *pp;
+		for (int i = 0; i < n and p; i++) {
+			pp = p;
+			p = p->next;
+		}
+		if (p == NULL) return NULL;
+		pp->next = NULL;
+		return p;
+	}
+	ListNode* merge(ListNode* l1, ListNode* l2) {  // 并归
+		ListNode* l = new ListNode(0), *head = l;
+		while (l1 and l2) {
+			if (l1->val < l2->val) {
+				l->next = l1;
+				l = l1;
+				l1 = l1->next;
+			}
+			else {
+				l->next = l2;
+				l = l2;
+				l2 = l2->next;
+			}
+		}
+		l->next = l1 ? l1 : l2;
+		l = head->next;
+		delete head;
+		return l;
+	}
 };
 // 区域和检索 - 数组不可变
 class NumArray {
